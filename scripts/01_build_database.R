@@ -26,11 +26,11 @@ if (!data_source %in% c("SASD", "SEDD", "SID")) {
 # CONFIGURATION
 #--------------------------
 data_type <- "CORE"
-missing_values <- c(-99, -88, -66, -99.9999999, -88.8888888,
+missing_values <- as.character(quote(c(-99, -88, -66, -99.9999999, -88.8888888,
                     -66.6666666, -9, -8, -6, -5, -9999,
                     -8888, -6666, -99999999, -999999999,
                     -888888888, -666666666, -999, -888,
-                    -666)
+                    -666)))
 
 #--------------------------
 # FUNCTIONS
@@ -75,7 +75,8 @@ write_outputs <- function(df, year) {
   duckdb_path <- here::here("storage", paste0(state, "_", data_source, "_", year, "_", data_type, ".duckdb"))
   
   # Write Parquet
-  write_parquet(df, parquet_path)
+  df_arrow <- arrow_table(df)
+  write_parquet(df_arrow, parquet_path)
   
   # Write DuckDB
   con <- dbConnect(duckdb::duckdb(), dbdir = duckdb_path, read_only = FALSE)
