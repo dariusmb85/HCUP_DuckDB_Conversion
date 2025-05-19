@@ -23,8 +23,16 @@ get_tag <- function(path, ext) {
 
 tags <- intersect(get_tag(parquet_files, "parquet"), get_tag(duckdb_files, "duckdb"))
 
-# Define a standard SQL query for DuckDB
-sql_query <- "SELECT RACE, FEMALE, AVG(AGE) AS avg_age FROM OR_hcup GROUP BY RACE, FEMALE"
+# Establish connection just to get table name
+con_tmp <- dbConnect(duckdb(), dbdir = duckdb_files, read_only = TRUE)
+table_list <- dbListTables(con_tmp)
+dbDisconnect(con_tmp, shutdown = TRUE)
+
+# Pick first table (assuming there's only one main table per DB)
+target_table <- table_list[1]
+
+# Use in query
+sql_query <- sprintf("SELECT RACE, FEMALE, AVG(AGE) AS avg_age FROM %s GROUP BY RACE, FEMALE", target_table)
 
 # Store timing results
 results <- list()
