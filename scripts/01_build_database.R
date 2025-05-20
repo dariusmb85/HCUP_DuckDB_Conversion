@@ -80,7 +80,8 @@ write_outputs <- function(df, year) {
   
   # Write DuckDB
   con <- dbConnect(duckdb::duckdb(), dbdir = duckdb_path, read_only = FALSE)
-  arrow::to_duckdb(df, table_name = "hcup_data", con = con)
+  arrow::to_duckdb(df, table_name = "temp_arrow_view", con = con)
+  DBI::dbExecute(con, "CREATE TABLE hcup_data AS SELECT * FROM temp_arrow_view")
   dbDisconnect(con, shutdown = TRUE)
 }
 
