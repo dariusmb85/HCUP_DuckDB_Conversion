@@ -36,19 +36,6 @@ missing_values <- as.character(quote(c(-99, -88, -66, -99.9999999, -88.8888888,
 # FUNCTIONS
 #--------------------------
 
-# get_column_positions <- function(year) {
-#   if (year == 2021) {
-#     readr::fwf_positions(
-#       start = c(1, 5, 10, 28, 32, 64, 69, 73, 75, 80),
-#       end = c(3, 8, 26, 30, 62, 67, 72, 73, 78, NA)
-#     )
-#   } else {
-#     readr::fwf_positions(
-#       start = c(1, 5, 10, 27, 31, 63, 68, 73, 75, 80),
-#       end = c(3, 8, 25, 29, 61, 66, 71, 73, 78, NA)
-#     )
-#   }
-# }
 
 get_column_positions <- function(loc_file) {
   lines <- readLines(loc_file)
