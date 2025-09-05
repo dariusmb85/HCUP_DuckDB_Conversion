@@ -113,7 +113,7 @@ process_hcup <- function(year) {
   meta_df <- fetch_metadata(data_source, year)
   df <- read_hcup_data(meta_df, year)
   write_outputs(df, year)
-  message("✅ Done: ", state, " ", data_source, " ", year)
+  message("Done: ", state, " ", data_source, " ", year)
 }
 
 #--------------------------
