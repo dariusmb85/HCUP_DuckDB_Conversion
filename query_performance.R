@@ -80,4 +80,4 @@ plot <- ggplot(timing_df, aes(x = tag, y = time_sec, fill = engine)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave(path(RESULT_DIR, "query_timing_plot.png"), plot, width = 8, height = 5)
 
-cat("\n✅ Benchmarking complete. Results saved to:", RESULT_DIR, "\n")
+cat("\n Benchmarking complete. Results saved to:", RESULT_DIR, "\n")
