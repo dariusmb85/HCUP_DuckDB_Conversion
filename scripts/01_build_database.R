@@ -15,7 +15,7 @@ if (length(args) < 3) {
 }
 
 state <- toupper(args[1])  # e.g., OR
-years <- as.integer(strsplit(args[2], ":")[[1]])  # e.g., 2020:2021
+year <- args[2] # e.g., 2016 or 2015q1q3
 data_source <- toupper(args[3])  # e.g., SEDD
 
 if (!data_source %in% c("SASD", "SEDD", "SID")) {
