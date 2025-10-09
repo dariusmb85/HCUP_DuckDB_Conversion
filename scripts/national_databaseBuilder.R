@@ -42,8 +42,12 @@ csv_base <- here("national")  # change if needed
 
 # Filename pattern (no header in CSV). Use {DATA_SOURCE}, {YEAR}, {TYPE}
 # Example actual filename this builds: NEDS_2016_CORE.csv
-csv_filename <- function(ds, year, type) sprintf("%s_%s_%s.csv", ds, year, type)
-
+csv_filename <- function(ds, year, type) {
+  if(year <= 2009){
+    type <- "Core"
+  }
+  sprintf("%s_%s_%s.csv", ds, year, type)
+}
 # Where to write outputs
 out_base <- here('national','NEDS_converted')
 
@@ -148,9 +152,9 @@ write_outputs <- function(df, ds, year, type) {
   
   write_parquet(arrow::arrow_table(df), parquet_path)
   
-  con <- dbConnect(duckdb::duckdb(), dbdir = duckdb_path, read_only = FALSE)
-  on.exit(dbDisconnect(con, shutdown = TRUE), add = TRUE)
-  dbWriteTable(con, "hcup_data", df, overwrite = TRUE)
+  # con <- dbConnect(duckdb::duckdb(), dbdir = duckdb_path, read_only = FALSE)
+  # on.exit(dbDisconnect(con, shutdown = TRUE), add = TRUE)
+  # dbWriteTable(con, "hcup_data", df, overwrite = TRUE)
 }
 
 # Build input CSV path/URL
