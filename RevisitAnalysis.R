@@ -152,30 +152,38 @@ get_prior_events <- function(df, proc_code = "^36.1") {
 # 9. master workflow
 #----------------------------
 run_revisit_pipeline <- function(state, sid_dir, sedd_dir) {
-  sid_files <- list.files(sid_dir, pattern = "\\.parquet$", full.names = TRUE)
+  # sid_files <- list.files(sid_dir, pattern = "\\.parquet$", full.names = TRUE)
   sedd_files <- list.files(sedd_dir, pattern = "\\.parquet$", full.names = TRUE)
   
-  sid_files <- sid_files[order(str_extract(sid_files, "\\d{4}") %>% as.integer())]
+  # sid_files <- sid_files[order(str_extract(sid_files, "\\d{4}") %>% as.integer())]
   sedd_files <- sedd_files[order(str_extract(sedd_files, "\\d{4}") %>% as.integer())]
   
-  sid_data <- read_hcup_files(sid_files[11:15], "SID")
-  sedd_data <- read_hcup_files(sedd_files[11:15], "SEDD")
+  # sid_data <- read_hcup_files(sid_files[11:13], "SID")
+  sedd_data <- read_hcup_files(sedd_files[11:14], "SEDD")
   
-  combined <- combine_sid_sedd(sid_data, sedd_data)
+  # combined <- combine_sid_sedd(sid_data, sedd_data)
   
-  revisit <- generate_revisit_df(combined)
+  # revisit <- generate_revisit_df(sid_data)
+  # revisit <- add_stable_attributes(revisit)
+  # revisit <- calculate_gap(revisit)
+  # revisit_sid <- detect_transfers(revisit)
+  # 
+  revisit <- generate_revisit_df(sedd_data)
   revisit <- add_stable_attributes(revisit)
   revisit <- calculate_gap(revisit)
-  revisit <- detect_transfers(revisit)
+  revisit_sedd <- detect_transfers(revisit)
   
   # optionally run condition-based flaggers
-  revisit <- flag_clean_period(revisit, dx_code = "^250", clean_days = 180)
+  # revisit_sid <- flag_clean_period(revisit_sid, dx_code = "^250", clean_days = 180)
+  revisit_sedd <- flag_clean_period(revisit_sedd, dx_code = "^250", clean_days = 180)
   
-  cabg_prior <- get_prior_events(revisit, proc_code = "^36.1")
-  
-  list(
-    revisit_df = revisit,
-    cabg_prior_events = cabg_prior
+  # cabg_prior <- get_prior_events(revisit_sedd, proc_code = "^36.1")
+  revisit_df <- revisit_sedd
+  # list(
+    # revisit_df = revisit_sedd,
+    # cabg_prior_events = cabg_prior
+  return(
+    revisit_df
   )
 }
 
@@ -228,7 +236,7 @@ cross_year_summary <- revisit_df %>%
     total_revisits_30d = sum(revisit_30day, na.rm = TRUE),
     .groups = "drop"
   ) %>%
-  arrange(desc(years_seen))
+  arrange(desc(total_visits))
 
 head(cross_year_summary)
 

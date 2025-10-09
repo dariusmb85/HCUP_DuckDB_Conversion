@@ -53,7 +53,8 @@ if ("HOSP_NIS" %in% names(revisit_df)) {
     summarise(revisit_rate = mean(revisit_30day, na.rm = TRUE)) %>%
     ggplot(aes(x=HOSP_NIS, y="30d", fill=revisit_rate)) +
     geom_tile() +
-    labs(title="Heatmap of 30-Day Revisit Rates by Hospital", x="Hospital ID", y="Interval") +
+    labs(title="Heatmap of 30-Day Revisit Rates by Hospital", x="Hospital ID", 
+         y="Interval") +
     scale_fill_viridis_c()
   
   ggsave("plots/heatmap_hospitals.png", plot=p4, width=10, height=4, dpi=300)
